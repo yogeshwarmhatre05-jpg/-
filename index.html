@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stick Figure Lover Club — Club Sidebar</title>
+
+<!-- ==================================================================
+     FONTS
+     Display: Fredoka — round, friendly, cartoon-marker energy.
+     Accent: Caveat — genuine handwriting, for the motto & doodles.
+     Body: Inter — legible at small sizes.
+================================================================== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ==================================================================
+   0. DESIGN TOKENS
+   Concept: a kid's sketchbook page — cream paper, faint grid,
+   black marker linework, one loud accent (stick-figure orange).
+   This is deliberately looser and more playful than the other club
+   sidebars: hand-tilted badges, a doodle figure, dashed borders.
+================================================================== */
+:root{
+  --paper:      #fdfaf1;
+  --paper-line: #eae3cd;
+  --card:       #ffffff;
+  --ink:        #201d18;
+  --ink-soft:   #7a7566;
+  --orange:     #ff5a36;
+  --orange-deep:#e1441f;
+  --yellow:     #ffc93d;
+  --sky:        #3fa9dd;
+  --line:       #e7e0c9;
+  --radius-sm:  10px;
+  --radius-md:  16px;
+  --radius-lg:  22px;
+  --font-display:'Fredoka', sans-serif;
+  --font-hand:   'Caveat', cursive;
+  --font-body:   'Inter', sans-serif;
+}
+
+/* ==================================================================
+   1. RESET & BASE
+================================================================== */
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; }
+body{
+  font-family:var(--font-body);
+  background:var(--paper);
+  color:var(--ink);
+  display:flex;
+  justify-content:center;
+  padding:14px 10px;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; }
+}
+img{ max-width:100%; display:block; }
+a{ color:inherit; text-decoration:none; }
+button{ font-family:inherit; cursor:pointer; border:none; background:none; color:inherit; }
+:focus-visible{ outline:2px solid var(--orange); outline-offset:2px; }
+
+/* ==================================================================
+   2. SIDEBAR SHELL — faint sketchbook grid, ink border
+================================================================== */
+.sidebar{
+  width:100%;
+  max-width:325px;
+  background:
+    linear-gradient(var(--paper-line) 1px, transparent 1px) 0 0/100% 22px,
+    var(--paper);
+  border:2px solid var(--ink);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  box-shadow:5px 5px 0 var(--ink);
+}
+
+.section{ padding:16px 16px; }
+.divider{ border:none; border-top:2px dashed var(--line); margin:0 16px; }
+
+.eyebrow{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:12px;
+  letter-spacing:0.3px;
+  color:var(--orange-deep);
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:11px;
+}
+.icon{ width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2; }
+
+.card{
+  background:var(--card);
+  border:2px solid var(--ink);
+  border-radius:var(--radius-md);
+}
+
+/* ==================================================================
+   3. FEATURED VIDEO — the very first thing in the sidebar
+================================================================== */
+.video-wrap{ padding:14px 14px 0; }
+.video-frame{
+  width:100%;
+  aspect-ratio:16/9;
+  border-radius:var(--radius-md);
+  overflow:hidden;
+  border:2px solid var(--ink);
+  background:var(--ink);
+  position:relative;
+}
+.video-frame video{ width:100%; height:100%; object-fit:cover; display:block; }
+.video-tag{
+  position:absolute; top:8px; left:8px;
+  background:var(--orange);
+  color:#fff;
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:10px;
+  letter-spacing:0.3px;
+  padding:4px 10px;
+  border-radius:20px;
+  border:2px solid var(--ink);
+  transform:rotate(-3deg);
+}
+
+/* ==================================================================
+   4. CLUB HEADER — doodle stick figure, hand-drawn underline
+================================================================== */
+.club-header{ padding:20px 18px 18px; text-align:center; position:relative; }
+.club-logo-row{ display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:10px; }
+.club-logo{
+  width:52px; height:52px; border-radius:50%;
+  border:2px solid var(--ink);
+  object-fit:cover; background:var(--card);
+}
+.doodle-figure{ width:34px; height:52px; flex-shrink:0; }
+.club-name{
+  font-family:var(--font-display); font-weight:700; font-size:20px;
+  color:var(--ink); line-height:1.25;
+}
+.club-tagline{
+  font-family:var(--font-hand); font-weight:700; font-size:17px;
+  color:var(--orange-deep); margin-top:2px;
+}
+.member-pill{
+  display:inline-flex; align-items:center; gap:5px;
+  margin-top:11px;
+  font-family:var(--font-display); font-weight:600; font-size:10.5px;
+  color:var(--ink);
+  background:var(--yellow);
+  border:2px solid var(--ink);
+  padding:4px 12px;
+  border-radius:20px;
+  transform:rotate(-2deg);
+}
+
+/* ==================================================================
+   5. OWNER
+================================================================== */
+.owner-card{ display:flex; align-items:center; gap:12px; padding:12px 14px; }
+.owner-avatar{ width:46px; height:46px; border-radius:50%; border:2px solid var(--ink); object-fit:cover; flex-shrink:0; background:var(--paper); }
+.owner-info{ flex:1; min-width:0; }
+.owner-name{ font-family:var(--font-display); font-weight:600; font-size:14px; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.owner-role{ font-size:11px; color:var(--ink-soft); margin-top:1px; }
+.owner-link{
+  display:inline-flex; align-items:center; gap:4px; margin-top:6px;
+  font-size:11px; font-weight:700; color:var(--sky);
+  border-bottom:2px solid var(--sky); padding-bottom:1px;
+}
+.owner-link:hover{ opacity:0.75; }
+
+/* ==================================================================
+   6. MISSION
+================================================================== */
+.mission-card{ padding:14px 16px; }
+.mission-text{ font-size:13px; line-height:1.55; color:var(--ink); }
+
+/* ==================================================================
+   7. EVENTS GRID
+================================================================== */
+.events-grid{ display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.event-card{
+  padding:12px 10px; text-align:center;
+}
+.event-emoji{ font-size:20px; margin-bottom:5px; }
+.event-name{ font-family:var(--font-display); font-weight:600; font-size:11.5px; color:var(--ink); }
+.event-card.wide{ grid-column:1 / -1; display:flex; align-items:center; gap:10px; text-align:left; padding:11px 14px; }
+.event-card.wide .event-emoji{ margin-bottom:0; font-size:22px; }
+
+/* ==================================================================
+   8. MEMBER GOALS + SPECIAL ROLES
+================================================================== */
+.chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
+.chip{
+  font-family:var(--font-display); font-weight:600; font-size:11px;
+  color:var(--ink);
+  background:var(--card);
+  border:2px solid var(--ink);
+  padding:6px 12px;
+  border-radius:20px;
+}
+.chip:nth-child(2){ transform:rotate(1.5deg); }
+.chip:nth-child(3){ transform:rotate(-1.5deg); }
+
+.roles-card{ padding:13px 15px; }
+.roles-text{ font-size:12.5px; line-height:1.55; color:var(--ink); }
+.role-badges{ display:flex; gap:7px; margin-top:10px; flex-wrap:wrap; }
+.role-badge{
+  font-family:var(--font-display); font-weight:600; font-size:10px;
+  color:#fff;
+  padding:4px 10px;
+  border-radius:20px;
+  border:2px solid var(--ink);
+}
+.role-badge.coordinator{ background:var(--sky); }
+.role-badge.admin{ background:var(--orange); }
+.role-badge.superadmin{ background:var(--ink); }
+
+/* ==================================================================
+   9. MOTTO
+================================================================== */
+.motto-card{
+  padding:16px 18px;
+  text-align:center;
+  background:var(--yellow);
+}
+.motto-text{
+  font-family:var(--font-hand); font-weight:700; font-size:19px;
+  color:var(--ink); line-height:1.3;
+}
+
+/* ==================================================================
+   10. RECENTLY JOINED — fixed height, scrollable
+================================================================== */
+.member-list{
+  display:flex; flex-direction:column; gap:7px;
+  height:252px; overflow-y:auto; padding-right:2px;
+}
+.member-list::-webkit-scrollbar{ width:4px; }
+.member-list::-webkit-scrollbar-thumb{ background:var(--orange); border-radius:2px; }
+
+.member-row{
+  display:flex; align-items:center; gap:10px; padding:8px 10px;
+  border-radius:var(--radius-sm);
+  background:var(--card);
+  border:2px solid var(--ink);
+  flex-shrink:0;
+}
+.member-avatar{ width:30px; height:30px; border-radius:50%; object-fit:cover; border:1.5px solid var(--ink); background:var(--paper); flex-shrink:0; }
+.member-info{ flex:1; min-width:0; }
+.member-name{ font-size:12.5px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.member-sub{ font-size:10px; color:var(--ink-soft); margin-top:1px; }
+.member-badge{
+  font-family:var(--font-display); font-weight:600; font-size:9.5px;
+  color:#fff;
+  background:var(--orange);
+  border:1.5px solid var(--ink);
+  padding:2px 8px;
+  border-radius:20px;
+  flex-shrink:0;
+}
+.list-skeleton{ font-size:11px; color:var(--ink-soft); padding:8px 2px; }
+
+/* ==================================================================
+   11. ACTION BUTTONS
+================================================================== */
+.action-grid{ display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.action-btn{
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  padding:12px 8px;
+  color:var(--ink); font-size:11.5px; font-weight:700;
+  font-family:var(--font-display);
+  transition:transform 0.15s ease;
+}
+.action-btn .icon{ width:18px; height:18px; color:var(--orange-deep); }
+.action-btn:hover{ transform:translateY(-2px); }
+.action-btn.wide{ grid-column:1 / -1; flex-direction:row; justify-content:center; padding:11px; background:var(--orange); color:#fff; }
+.action-btn.wide .icon{ color:#fff; }
+
+/* ==================================================================
+   12. FOOTER
+================================================================== */
+.sidebar-footer{ text-align:center; padding:14px 16px 20px; font-size:10px; color:var(--ink-soft); }
+.sidebar-footer .accent{ color:var(--orange-deep); font-weight:700; }
+
+@media (max-width:360px){
+  .sidebar{ max-width:100%; }
+  body{ padding:10px 6px; }
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+
+  <!-- ============================== 1. FEATURED VIDEO (on top) ============================== -->
+  <div class="video-wrap">
+    <div class="video-frame">
+      <span class="video-tag">Featured</span>
+      <!-- TODO: swap this src for your own club highlight reel -->
+      <img
+  src="https://i.ibb.co/TBBnPRhw/61d9fdf37e68618f17b50cd6dedaa383-1.jpg"
+  alt="Club image"
+  style="width:100%; height:auto; display:block;"
+>
+    </div>
+  </div>
+
+  <!-- ============================== 2. CLUB HEADER ============================== -->
+  <section class="section club-header" aria-label="Club header">
+    <div class="club-logo-row">
+      <!-- hand-drawn stick figure, a small nod to Alan Becker's animations -->
+      <svg class="doodle-figure" viewBox="0 0 34 52" fill="none" stroke="#201d18" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="17" cy="8" r="6.5"/>
+        <line x1="17" y1="14.5" x2="17" y2="34"/>
+        <line x1="17" y1="20" x2="6" y2="14"/>
+        <line x1="17" y1="20" x2="28" y2="26"/>
+        <line x1="17" y1="34" x2="7" y2="48"/>
+        <line x1="17" y1="34" x2="27" y2="48"/>
+        <line x1="24" y1="22" x2="30" y2="14"/>
+      </svg>
+      <img class="club-logo" id="clubLogo" src="" alt="Club logo">
+    </div>
+    <h1 class="club-name" id="clubName">Stick Figure Lover Club</h1>
+    <p class="club-tagline">Make chess fun, friendly &amp; creative!</p>
+    <span class="member-pill" id="memberPill">⭐ — members</span>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================== 3. CLUB OWNER ============================== -->
+  <section class="section" aria-label="Club owner">
+    <p class="eyebrow">Club Owner</p>
+    <div class="owner-card card">
+      <img class="owner-avatar" id="ownerAvatar" src="" alt="Owner avatar">
+      <div class="owner-info">
+        <div class="owner-name" id="ownerName">Loading…</div>
+        <div class="owner-role">Founder &amp; Administrator</div>
+        <a class="owner-link" id="ownerLink" href="https://www.chess.com/member/hates_draw" target="_blank" rel="noopener">
+          View profile
+          <svg class="icon" style="width:10px;height:10px;stroke-width:2.5" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================== 4. MISSION ============================== -->
+  <section class="section" aria-label="Club mission">
+    <p class="eyebrow">🎯 Mission</p>
+    <div class="mission-card card">
+      <p class="mission-text">Make chess fun, friendly &amp; creative — no stick figure left behind.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================== 5. EVENTS ============================== -->
+  <section class="section" aria-label="Club events">
+    <p class="eyebrow">🎉 Events</p>
+    <div class="events-grid">
+      <div class="event-card card"><div class="event-emoji">♟️</div><div class="event-name">Club Tournaments</div></div>
+      <div class="event-card card"><div class="event-emoji">⚔️</div><div class="event-name">Vote Chess</div></div>
+      <div class="event-card card"><div class="event-emoji">🧩</div><div class="event-name">Chess Puzzles</div></div>
+      <div class="event-card card"><div class="event-emoji">😂</div><div class="event-name">Meme Contests</div></div>
+      <div class="event-card wide card"><div class="event-emoji">🎨</div><div class="event-name">Stick Figure Art</div></div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================== 6. MEMBER GOALS ============================== -->
+  <section class="section" aria-label="Member goals">
+    <p class="eyebrow">🙌 Member Goals</p>
+    <div class="chip-row">
+      <span class="chip">Be Active</span>
+      <span class="chip">Be Respectful</span>
+      <span class="chip">Have Fun</span>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================== 7. SPECIAL ROLES ============================== -->
+  <section class="section" aria-label="Special roles">
+    <p class="eyebrow">🏅 Special Roles</p>
+    <div class="roles-card card">
+      <p class="roles-text">Active members can earn a promotion — stick around and climb the ranks!</p>
+      <div class="role-badges">
+        <span class="role-badge coordinator">Coordinator</span>
+        <span class="role-badge admin">Admin</span>
+        <span class="role-badge superadmin">Super Admin</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================== 8. CLUB MOTTO ============================== -->
