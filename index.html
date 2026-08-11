@@ -403,3 +403,200 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; color
   <hr class="divider">
 
   <!-- ============================== 8. CLUB MOTTO ============================== -->
+  <section class="section" aria-label="Club motto">
+    <div class="motto-card card">
+      <p class="motto-text">"No arms. No legs. Still checkmating." 😂</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================== 9. RECENTLY JOINED ============================== -->
+  <section class="section" aria-label="Recently joined members">
+    <p class="eyebrow">🆕 Recently Joined</p>
+    <div class="member-list" id="recentJoinsList">
+      <div class="list-skeleton">Fetching newest members…</div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================== 10. ACTION BUTTONS ============================== -->
+  <section class="section" aria-label="Club actions">
+    <div class="action-grid">
+      <a class="action-btn card" href="https://www.chess.com/clubs/forum/view/club-rules-689-2" target="_blank" rel="noopener">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+        Club Rules
+      </a>
+      <a class="action-btn card" href="https://www.chess.com/clubs/forum/view/advertisement-452" target="_blank" rel="noopener">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1Z" stroke-linejoin="round"/><path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14" stroke-linecap="round"/></svg>
+        Advertisement
+      </a>
+      <a class="action-btn wide" href="https://www.chess.com/club/stick-figure-lover-club" target="_blank" rel="noopener">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM20 8v6M23 11h-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Join the Club
+      </a>
+    </div>
+  </section>
+
+  <div class="sidebar-footer">Drawn with love by the <span class="accent">Stick Figure Lover Club</span></div>
+</aside>
+
+<script>
+/* ==================================================================
+   CONFIG
+================================================================== */
+const CONFIG = {
+  CLUB_SLUG: "stick-figure-lover-club",
+  CLUB_URL: "https://www.chess.com/club/stick-figure-lover-club",
+  API_BASE: "https://api.chess.com/pub",
+  OWNER_USERNAME: "hates_draw",
+  RECENT_JOINS_COUNT: 11
+};
+
+// Fallback, shaped exactly like the live club/{slug}/members response,
+// used only if the live fetch fails.
+const PLACEHOLDER_MEMBERS = {
+  weekly: [
+    { username: "anikarv0103", joined: 1786362901 },
+    { username: "bc005641", joined: 1786377805 },
+    { username: "cutegirl1901", joined: 1786362120 },
+    { username: "hates_draw", joined: 1786272445 },
+    { username: "ivy_88", joined: 1786362828 },
+    { username: "jake-66w", joined: 1786360414 },
+    { username: "liel2012", joined: 1786280909 },
+    { username: "mavik24", joined: 1786360862 },
+    { username: "meangel13", joined: 1786365198 },
+    { username: "shivaji_the_boss_247", joined: 1786362867 },
+    { username: "yogi136", joined: 1786367359 }
+  ],
+  monthly: [],
+  all_time: []
+};
+
+/* ==================================================================
+   HELPERS
+================================================================== */
+async function fetchJSON(url){
+  try{
+    const bust = url.includes("?") ? "&" : "?";
+    const res = await fetch(url + bust + "_=" + Date.now(), { cache: "no-store" });
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    return await res.json();
+  }catch(err){
+    console.warn("Fetch failed:", url, err.message);
+    return null;
+  }
+}
+
+function escapeHTML(str){
+  const div = document.createElement("div");
+  div.textContent = str == null ? "" : String(str);
+  return div.innerHTML;
+}
+
+function fmtDate(unix){
+  if(!unix) return "—";
+  return new Date(unix * 1000).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+}
+
+async function mapLimit(items, limit, fn){
+  const results = new Array(items.length);
+  let i = 0;
+  async function worker(){
+    while(i < items.length){
+      const idx = i++;
+      results[idx] = await fn(items[idx], idx);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return results;
+}
+
+const avatarFallback = "https://www.chess.com/bundles/web/images/noavatar_l.png";
+const profileURL = (u) => `https://www.chess.com/member/${encodeURIComponent(u)}`;
+
+/* ==================================================================
+   1. CLUB HEADER (logo + member count)
+================================================================== */
+async function loadClubInfo(){
+  const club = await fetchJSON(`${CONFIG.API_BASE}/club/${CONFIG.CLUB_SLUG}`);
+  if(!club){
+    document.getElementById("clubLogo").src = avatarFallback;
+    return;
+  }
+  document.getElementById("clubLogo").src = club.icon || avatarFallback;
+  document.getElementById("clubLogo").alt = club.name + " logo";
+  if(club.name) document.getElementById("clubName").textContent = club.name;
+  if(typeof club.members_count === "number"){
+    document.getElementById("memberPill").textContent = `⭐ ${club.members_count.toLocaleString()} members`;
+  }
+}
+
+/* ==================================================================
+   2. CLUB OWNER
+================================================================== */
+async function loadOwner(){
+  const profile = await fetchJSON(`${CONFIG.API_BASE}/player/${CONFIG.OWNER_USERNAME}`);
+  const link = document.getElementById("ownerLink");
+  link.href = profileURL(CONFIG.OWNER_USERNAME);
+  if(!profile){
+    document.getElementById("ownerName").textContent = CONFIG.OWNER_USERNAME;
+    document.getElementById("ownerAvatar").src = avatarFallback;
+    return;
+  }
+  document.getElementById("ownerAvatar").src = profile.avatar || avatarFallback;
+  document.getElementById("ownerName").textContent = profile.name || profile.username;
+}
+
+/* ==================================================================
+   3. RECENTLY JOINED — no ratings here on purpose, just fresh faces.
+================================================================== */
+function renderRecentJoins(list){
+  const el = document.getElementById("recentJoinsList");
+  if(!list.length){ el.innerHTML = '<div class="list-skeleton">No new members yet.</div>'; return; }
+
+  const cutoff = Date.now()/1000 - (3 * 24 * 3600); // "NEW" badge for last 3 days
+  el.innerHTML = list.map(p => `
+    <a class="member-row" href="${profileURL(p.username)}" target="_blank" rel="noopener">
+      <img class="member-avatar" src="${p.avatar || avatarFallback}" alt="" loading="lazy">
+      <div class="member-info">
+        <div class="member-name">${escapeHTML(p.username)}</div>
+        <div class="member-sub">Joined ${fmtDate(p.joined)}</div>
+      </div>
+      ${p.joined > cutoff ? '<span class="member-badge">NEW</span>' : ''}
+    </a>
+  `).join("");
+}
+
+async function loadRecentJoins(){
+  let members = PLACEHOLDER_MEMBERS;
+  const live = await fetchJSON(`${CONFIG.API_BASE}/club/${CONFIG.CLUB_SLUG}/members`);
+  if(live) members = live;
+
+  const all = [...(members.weekly||[]), ...(members.monthly||[]), ...(members.all_time||[])];
+  const seen = new Set();
+  const merged = [];
+  all.forEach(m => { if(!seen.has(m.username)){ seen.add(m.username); merged.push(m); } });
+  merged.sort((a,b) => (b.joined||0) - (a.joined||0));
+
+  const recent = merged.slice(0, CONFIG.RECENT_JOINS_COUNT);
+  const rows = await mapLimit(recent, 5, async (m) => {
+    const profile = await fetchJSON(`${CONFIG.API_BASE}/player/${m.username}`);
+    return { username: m.username, joined: m.joined, avatar: profile && profile.avatar };
+  });
+
+  renderRecentJoins(rows);
+}
+
+/* ==================================================================
+   INIT
+================================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+  loadClubInfo();
+  loadOwner();
+  loadRecentJoins();
+});
+</script>
+</body>
+</html>
